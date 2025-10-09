@@ -1,228 +1,181 @@
-#DOCUMENTACIÓN TÉCNICA DEL PROYECTO: NEXUS NOTES
+# 📘 Nexus Notes – Sistema Inteligente de Notas Flotantes Asistido por IA
 
-Desarrollado en colaboración humano-IA (Google AI Studio + Mentor Humano)
-Versión entregable: .EXE (interfaz de escritorio)
-Lenguaje base de desarrollo: Python (compilado a ejecutable)
-Duración de desarrollo asistido: Proyecto de codificación generativa con intervención de mentoría humana
+## 1. Introducción General
 
-1. Resumen Ejecutivo
+**Nexus Notes** es una aplicación de escritorio desarrollada en entorno **Tkinter (Python GUI Toolkit)** y codificada mediante un proceso de **colaboración humano–IA**, utilizando **Google AI Studio** como sistema generativo de ingeniería de código.  
+El proyecto representa un ejemplo de **codificación artificial aplicada**: una metodología donde la inteligencia artificial produce el código base, mientras el humano actúa como **mentor conceptual**, definiendo requerimientos, arquitectura y comportamiento lógico del software.
 
-Nexus Notes es una aplicación de escritorio desarrollada bajo un enfoque de codificación artificial —una modalidad de desarrollo en la que la Inteligencia Artificial (IA) colabora activamente en la escritura del código, siguiendo las directrices conceptuales, de diseño y funcionalidad establecidas por su mentor humano.
+El resultado es una **plataforma de notas flotantes inteligentes**, diseñada para personas con déficit de atención, profesionales multitarea o usuarios que requieren mantener múltiples notas visibles simultáneamente, sin distracciones ni interferencias en el flujo de trabajo.
 
-El proyecto fue diseñado, estructurado y codificado en colaboración con Google AI Studio, utilizando técnicas de IA generativa de código para producir un entorno de notas flotantes cognitivamente optimizado, enfocado en usuarios con dificultades de memoria, concentración o retención cognitiva, como en casos de TDAH, déficit atencional o sobrecarga de tareas.
+---
 
-La aplicación Nexus Notes permite crear, organizar y anclar notas temáticas que permanecen visibles en pantalla, simulando post-its inteligentes y desplazables. Cada nota es persistente, interactiva y autocontenida, con soporte para texto enriquecido, fórmulas matemáticas renderizadas, desplazamiento controlado y posición memorizada.
+## 2. Descripción Técnica General
 
-El resultado es una herramienta de organización cognitiva inteligente, adaptable al flujo mental del usuario, que fusiona el diseño visual minimalista con la persistencia automática y la accesibilidad sin distracciones.
+**Tipo de Proyecto:** Aplicación de escritorio (Standalone).  
+**Lenguaje Base:** Python 3.x (para desarrollo).  
+**Entorno de Ejecución Final:** Archivo ejecutable (.exe) distribuible sin dependencias externas.  
+**Interfaz:** Gráfica (GUI) basada en `tkinter` con componentes de interacción visual dinámica.  
+**Motor de Persistencia:** Sistema JSON local (archivo `nexus_notes_data.json`).  
+**Generación de Código:** IA generativa (Google AI Studio) bajo supervisión humana directa.  
+**Modo de distribución:** Instalación directa mediante ejecutable empaquetado con PyInstaller u otro generador de binarios.
 
-2. Objetivos del Proyecto
-2.1 Objetivo General
+---
 
-Desarrollar una aplicación de escritorio autónoma que permita al usuario crear, gestionar y visualizar notas temáticas inteligentes en un entorno minimalista y sin distracciones, generada mediante Inteligencia Artificial colaborativa, demostrando la capacidad de un flujo de desarrollo asistido por IA con dirección humana.
+## 3. Propósito e Innovación
 
-2.2 Objetivos Específicos
+El propósito de **Nexus Notes** es simplificar la **gestión cognitiva y visual de información breve** mediante un sistema de notas flotantes “anclables” en pantalla, simulando post-its digitales pero con comportamientos inteligentes:
+- Persistencia automática del contenido.
+- Posicionamiento recordado en pantalla.
+- Capacidad de flotar sobre todas las ventanas.
+- Soporte para fórmulas matemáticas renderizadas en tiempo real (usando `matplotlib`).
+- Adaptación visual realista a escala física (3x3 pulgadas reales según DPI del monitor).
+- Interacción intuitiva basada en eventos del sistema de ventanas.
 
-Implementar un sistema de notas temáticas persistentes con almacenamiento estructurado en formato JSON.
+Su enfoque está orientado a la **productividad cognitiva**: reforzar la memoria de trabajo mediante estimulación visual controlada y minimizar la interferencia entre tareas.
 
-Crear un entorno gráfico fluido y funcional utilizando la librería Tkinter como base de interfaz nativa.
+---
 
-Introducir un sistema de notas flotantes ("satélites"), que puedan anclarse y desplazarse libremente por el escritorio, manteniendo su posición entre sesiones.
+## 4. Arquitectura de Software
 
-Permitir la renderización de expresiones matemáticas o simbólicas mediante Matplotlib y PIL, integradas directamente en los post-its.
+### 4.1. Estructura de Capas
 
-Asegurar autoguardado constante sin intervención del usuario, protegiendo la integridad de los datos.
+| Capa | Descripción | Principales Componentes |
+|------|--------------|-------------------------|
+| **Capa de Presentación (UI)** | Implementa la interfaz gráfica, gestión de eventos y manipulación de ventanas flotantes. | `tkinter`, `font`, `Toplevel`, `Frame`, `Scrollbar`, `Listbox` |
+| **Capa de Lógica de Negocio** | Controla la creación, edición, anclaje y persistencia de notas. Coordina los flujos entre interfaz y almacenamiento. | `add_new_note`, `toggle_pin_note`, `create_satellite_window`, `delete_theme` |
+| **Capa de Persistencia** | Gestiona la lectura y escritura de datos persistentes en formato JSON. | `load_data`, `write_data_to_disk` |
+| **Capa de Renderizado Matemático** | Genera visualizaciones y fórmulas matemáticas incrustadas en las notas. | `matplotlib`, `io.BytesIO`, `PIL.Image`, `ImageTk.PhotoImage` |
+| **Capa de Control Principal (Main App)** | Punto de inicio y ciclo de vida del programa. | `root.mainloop()`, gestión de cierre y guardado |
 
-Garantizar portabilidad total mediante distribución compilada en formato .exe, sin requerir entorno Python local.
+---
 
-3. Contexto Tecnológico y Motivación
+## 5. Diseño Funcional
 
-La idea de Nexus Notes surge de la necesidad de disponer de una herramienta liviana, intuitiva y cognitiva, que permita estructurar la memoria externa de una persona con rapidez, accesibilidad y control visual constante.
+### 5.1. Temas y Categorías
+Cada grupo de notas pertenece a un “tema” (por ejemplo, *Realista*, *Ideas rápidas*, *Recordatorios diarios*).  
+El usuario puede **crear, eliminar o renombrar temas**. Cada tema agrupa múltiples apuntes, manteniendo una jerarquía lógica.
 
-A diferencia de los editores de texto convencionales o las aplicaciones de productividad sobrecargadas, Nexus Notes se centra en la inmediatez de la memoria visual: pequeñas notas autoanclables en pantalla que actúan como extensiones del pensamiento activo.
+### 5.2. Notas flotantes (Post-its virtuales)
+Cada nota puede ser:
+- **Anclada**: visible como ventana flotante permanente (se conserva su posición exacta en pantalla).
+- **Desanclada**: almacenada en la base JSON pero no visible.
+- **Editable**: el usuario puede modificar el contenido desde el editor integrado.
 
-La motivación principal fue combinar el razonamiento humano —que comprende la necesidad y la ergonomía cognitiva— con la capacidad sintáctica y estructural de la IA, para generar código funcional, optimizado y sostenible.
+### 5.3. Persistencia inteligente
+Al cerrar la aplicación, todas las notas, posiciones, estados de anclaje y temas son guardados en `nexus_notes_data.json` de manera automática.  
+El formato JSON facilita portabilidad, respaldo y edición manual si se requiere.
 
-El resultado demuestra que un humano, actuando como mentor de IA, puede dirigir proyectos de software completos, donde la máquina asume la redacción técnica y el humano asume el diseño conceptual y la validación funcional.
+### 5.4. Compatibilidad visual realista
+Los tamaños de las notas son equivalentes a **3x3 pulgadas reales**, calculadas dinámicamente según la densidad de píxeles del monitor (DPI).  
+Esto produce una experiencia táctil y visual idéntica a las notas adhesivas físicas.
 
-4. Arquitectura General del Sistema
-4.1 Diagrama Textual de Arquitectura
-Nexus Notes
-│
-├── Núcleo de Aplicación (Tkinter Root)
-│   ├── Sidebar de Temas
-│   ├── Panel de Apuntes
-│   ├── Sistema de Satélites (Ventanas flotantes)
-│   └── Módulos de Control de Eventos (Tkinter bindings)
-│
-├── Subsistema de Persistencia
-│   ├── Gestor de Datos JSON (lectura/escritura)
-│   └── Control de integridad y guardado automático
-│
-├── Subsistema de Renderizado Gráfico
-│   ├── Motor de texto enriquecido
-│   ├── Renderizador de fórmulas matemáticas (Matplotlib + PIL)
-│   └── Control de Scroll dinámico
-│
-├── Subsistema de Interacción
-│   ├── Movimiento de ventanas flotantes
-│   ├── Sistema de anclaje/desanclaje
-│   └── Guardado de coordenadas en tiempo real
-│
-└── Archivo de Datos
-    └── nexus_notes_data.json
+---
 
-5. Interfaz de Usuario (UI/UX)
-5.1 Diseño General
+## 6. Descripción Detallada de Componentes
 
-La interfaz fue diseñada con criterios de ergonomía visual y cognitiva. Se prioriza la ausencia de distracciones, el contraste visual adecuado y la uniformidad tipográfica.
+### 6.1. Módulo `load_data()`
+- Verifica la existencia del archivo de datos JSON.
+- Si no existe, crea una estructura inicial predeterminada.
+- Implementa manejo de errores ante archivos corruptos o no encontrados.
 
-Lado izquierdo (Sidebar): muestra los temas principales creados por el usuario.
+### 6.2. Módulo `write_data_to_disk()`
+- Guarda todos los cambios de notas, temas y posiciones.
+- Emplea manejo de excepciones controladas para evitar pérdida de información.
 
-Panel derecho: muestra las notas asociadas al tema seleccionado.
+### 6.3. Función `create_satellite_window()`
+- Crea la ventana flotante “post-it”.
+- Define color, tamaño, scroll y renderizado de texto.
+- Implementa arrastre libre en pantalla y guardado de posición.
+- Gestiona el cierre individual de cada nota anclada.
 
-Notas flotantes ("Satélites"): simulan post-its amarillos de tamaño fijo (3x3 pulgadas), visualmente realistas, desplazables con el ratón y con scroll incorporado.
+### 6.4. Función `open_note_editor()`
+- Genera un editor modal para modificar contenido de la nota.
+- Guarda automáticamente al cerrar la ventana.
+- Regenera la versión flotante actualizada si estaba anclada.
 
-5.2 Interacción Natural
+### 6.5. Funciones de Control (`add_new_note`, `delete_note`, `toggle_pin_note`)
+- Controlan la creación, eliminación y anclaje de notas.
+- Sincronizan el estado visual con la base de datos persistente.
 
-Las acciones de crear, eliminar o editar notas son directas e intuitivas, evitando sobrecarga cognitiva:
+---
 
-Acción	Método de Activación
-Crear tema	Botón “+ Tema”
-Eliminar tema	Botón “– Tema”
-Crear nota	Botón “+”
-Eliminar nota	Botón “–”
-Editar nota	Doble clic sobre la nota
-Anclar/Desanclar nota	Botón 📌
-6. Lógica Interna y Persistencia de Datos
-6.1 Estructura del Archivo de Datos (JSON)
+## 7. Flujo de Ejecución
 
-El archivo nexus_notes_data.json almacena de manera jerárquica los temas y sus respectivas notas:
+1. **Inicio de la Aplicación**
+   - Se carga el archivo JSON existente o se inicializa uno nuevo.
+   - Se crean los paneles principales (temas y apuntes).
+2. **Interacción del Usuario**
+   - Selección de tema → muestra sus notas asociadas.
+   - Doble clic en una nota → abre editor.
+   - Clic en 📌 → convierte la nota en ventana flotante.
+3. **Persistencia Continua**
+   - Cada acción que modifica el estado es registrada inmediatamente.
+   - Al cerrar, se ejecuta `on_close()` que guarda y finaliza el proceso.
+4. **Reinicio**
+   - En la siguiente sesión, se restauran las posiciones flotantes y temas previos.
 
-{
-  "Tema": [
-    {
-      "titulo": "Nota ejemplo",
-      "contenido": "Texto del apunte...",
-      "anclado": true,
-      "pos_x": 100,
-      "pos_y": 200
-    }
-  ]
-}
+---
 
-6.2 Módulos Funcionales
+## 8. Seguridad y Confiabilidad
 
-load_data(): carga inicial de datos persistentes.
+- No se utilizan conexiones externas ni acceso a internet.
+- El sistema opera completamente en entorno local (modo offline).
+- El formato de guardado JSON evita corrupción masiva ante fallos inesperados.
+- Se aplican validaciones de nombres duplicados y manejo de excepciones en operaciones críticas.
 
-write_data_to_disk(): guarda cambios automáticamente.
+---
 
-update_notes_list(): sincroniza lista visual con estructura de datos.
+## 9. Optimización y Rendimiento
 
-create_satellite_window(): instancia las ventanas flotantes independientes.
+- Interfaz optimizada para bajo consumo de memoria.
+- Uso controlado de `PIL` y `matplotlib` para renderizado ligero.
+- Lógica asíncrona innecesaria eliminada para mejorar estabilidad.
+- Gestión manual de DPI para evitar deformación visual en monitores de alta densidad.
 
-toggle_pin_note(): gestiona el anclaje dinámico.
+---
 
-initialize_satellites(): restituye los post-its anclados de la sesión anterior.
+## 10. Escalabilidad y Extensión
 
-6.3 Robustez
+El diseño modular permite futuras expansiones, tales como:
+- Integración con **voz a texto** o **reconocimiento de voz IA**.
+- Sincronización en nube o almacenamiento cifrado.
+- Implementación de recordatorios automáticos y alarmas.
+- Exportación PDF o markdown de notas.
+- Interfaz moderna (Fluent Design / Material UI) mediante frameworks de terceros.
 
-El sistema incluye manejo de errores en la carga JSON y validaciones previas a la escritura, evitando corrupción de datos o cierre inesperado.
+---
 
-7. Integración de Inteligencia Artificial en el Desarrollo
-7.1 Proceso de Codificación Artificial
+## 11. Implementación Asistida por Inteligencia Artificial
 
-Este proyecto se desarrolló mediante codificación asistida por IA (AI-Powered Programming), una metodología emergente en la que un modelo de IA (en este caso, Google AI Studio) genera el código base, mientras el mentor humano:
+El código fuente fue **generado y estructurado con asistencia de Google AI Studio**, dentro de un flujo de desarrollo denominado **Codificación Artificial Supervisada (CAS)**, donde:
 
-Define la arquitectura y el propósito funcional.
+- La IA redacta y organiza el código siguiendo directrices naturales del mentor humano.  
+- El humano actúa como ingeniero supervisor, validando, corrigiendo y estructurando la lógica arquitectónica.  
+- El resultado se alinea con las prácticas de **IA aplicada a ingeniería de software** (AI-driven Coding).
 
-Supervisa la coherencia semántica y lógica del código.
+**Participación humana:**  
+- Diseño conceptual del sistema.  
+- Supervisión de la lógica de interfaz y persistencia.  
+- Validación del comportamiento final y coherencia visual.  
 
-Corrige, reentrena o ajusta la IA según los requisitos del producto.
+**Participación de IA (Google AI Studio):**  
+- Generación automática de código estructural.  
+- Propuesta de soluciones de interacción gráfica.  
+- Optimización sintáctica y corrección de errores.
 
-La sinergia entre intuición humana y producción algorítmica permitió alcanzar una calidad estructural alta en un tiempo significativamente reducido, demostrando la viabilidad del desarrollo conjunto humano-IA.
+Este modelo mixto demuestra la **capacidad de la IA moderna para impulsar el desarrollo de software autónomo con supervisión ética y técnica humana**, siendo aplicable a proyectos de ingeniería real.
 
-7.2 Roles
-Rol	Descripción
-Mentor Humano	Diseña la idea, la interfaz y las reglas cognitivas del producto.
-Inteligencia Artificial	Codifica, estructura y genera el código fuente según las directrices.
-Revisor Humano	Valida y corrige errores sintácticos, de persistencia o de UX.
-8. Requisitos Técnicos y Distribución
-8.1 Requisitos de Ejecución
+---
 
-Sistema operativo: Windows 10/11
+## 12. Distribución y Entrega Final
 
-Arquitectura: x64
+La versión entregable al usuario final es un **ejecutable (.exe)** compilado a partir del código Python mediante herramientas como:
+- `PyInstaller`
+- `auto-py-to-exe`
+- `cx_Freeze`
 
-Dependencias incluidas en el compilado .exe (no requiere instalación de Python)
+No requiere instalación de Python ni dependencias externas.
 
-Memoria RAM mínima: 2 GB
+**Estructura de distribución recomendada:**
 
-Espacio en disco: 50 MB
 
-8.2 Instalación
-
-El archivo NexusNotes.exe es un ejecutable autónomo. No requiere instalación ni dependencias externas.
-
-Pasos de uso:
-
-Copiar el ejecutable a cualquier carpeta del sistema.
-
-Ejecutarlo (doble clic).
-
-Comenzar a crear temas y notas de inmediato.
-
-El programa generará automáticamente su archivo de datos nexus_notes_data.json en el mismo directorio, asegurando persistencia entre sesiones.
-
-9. Innovación Cognitiva y Aplicabilidad
-
-Nexus Notes se sitúa en la frontera entre herramientas cognitivas asistidas y software productivo personal, representando una línea de desarrollo donde la IA no reemplaza al humano, sino que amplifica su capacidad de materializar ideas funcionales.
-
-Aplicaciones potenciales:
-
-Apoyo a estudiantes con déficit de atención.
-
-Gestión visual de tareas complejas o simultáneas.
-
-Apoyo cognitivo a investigadores, programadores o diseñadores.
-
-Demostración técnica de codificación asistida para portfolios o incubadoras de IA.
-
-10. Evaluación de Calidad y Pruebas
-
-Durante la fase de validación, se realizaron pruebas unitarias y empíricas sobre los siguientes aspectos:
-
-Componente	Prueba	Resultado
-Carga y guardado JSON	Resistencia ante cierre inesperado	Correcta
-Movimiento de satélites	Fluidez y persistencia de coordenadas	Correcta
-Renderizado de fórmulas	Compatibilidad con caracteres matemáticos	Correcta
-Anclaje/desanclaje	Sin pérdida de estado	Correcta
-Persistencia entre sesiones	100% confiable	Correcta
-11. Conclusiones y Proyección Tecnológica
-
-Nexus Notes representa un ejemplo sólido de cómo la Inteligencia Artificial puede co-diseñar software funcional bajo guía humana, sin necesidad de plantillas predefinidas ni frameworks automáticos.
-
-Su relevancia en el contexto actual de ingeniería digital radica en:
-
-Demostrar la madurez del desarrollo híbrido Humano–IA.
-
-Exhibir un modelo de trabajo replicable en entornos de codificación generativa.
-
-Mostrar la capacidad de un desarrollador joven o en formación para dirigir proyectos de IA aplicada.
-
-En un entorno empresarial moderno, este proyecto constituye una muestra tangible de liderazgo técnico, creatividad cognitiva y capacidad de dirección de IA aplicada al desarrollo real.
-
-12. Ficha Técnica del Proyecto
-Parámetro	Detalle
-Nombre del Proyecto	Nexus Notes
-Tipo	Aplicación de escritorio IA-asistida
-Lenguaje de programación	Python 3.11
-Librerías principales	Tkinter, PIL, Matplotlib, JSON
-Formato final	.exe (autónomo)
-Generador de código IA	Google AI Studio
-Mentor Humano	Ángel
-Propósito	Asistente cognitivo de notas persistentes
-Estado	Completado y estable
-Modo de distribución	Portable / Local
-13. Reconocimientos
-
-Este desarrollo fue posible gracias a la sinergia creativa entre la inteligencia humana y la inteligencia artificial, demostrando que la colaboración entre ambas entidades puede producir resultados funcionales, elegantes y técnicamente sólidos.
