@@ -1,4 +1,4 @@
-##Millon note– Sistema Inteligente de Notas Flotantes Asistido por IA
+## Millon note– Sistema Inteligente de Notas Flotantes Asistido por IA
 
 ## 1. Introducción General
 
