@@ -1,8 +1,8 @@
-# 📘 Nexus Notes – Sistema Inteligente de Notas Flotantes Asistido por IA
+# 📘Millon note– Sistema Inteligente de Notas Flotantes Asistido por IA
 
 ## 1. Introducción General
 
-**Nexus Notes** es una aplicación de escritorio desarrollada en entorno **Tkinter (Python GUI Toolkit)** y codificada mediante un proceso de **colaboración humano–IA**, utilizando **Google AI Studio** como sistema generativo de ingeniería de código.  
+**Millon note** es una aplicación de escritorio desarrollada en entorno **Tkinter (Python GUI Toolkit)** y codificada mediante un proceso de **colaboración humano–IA**, utilizando **Google AI Studio** como sistema generativo de ingeniería de código.  
 El proyecto representa un ejemplo de **codificación artificial aplicada**: una metodología donde la inteligencia artificial produce el código base, mientras el humano actúa como **mentor conceptual**, definiendo requerimientos, arquitectura y comportamiento lógico del software.
 
 El resultado es una **plataforma de notas flotantes inteligentes**, diseñada para personas con déficit de atención, profesionales multitarea o usuarios que requieren mantener múltiples notas visibles simultáneamente, sin distracciones ni interferencias en el flujo de trabajo.
@@ -23,7 +23,7 @@ El resultado es una **plataforma de notas flotantes inteligentes**, diseñada pa
 
 ## 3. Propósito e Innovación
 
-El propósito de **Nexus Notes** es simplificar la **gestión cognitiva y visual de información breve** mediante un sistema de notas flotantes “anclables” en pantalla, simulando post-its digitales pero con comportamientos inteligentes:
+El propósito de **Millon note** es simplificar la **gestión cognitiva y visual de información breve** mediante un sistema de notas flotantes “anclables” en pantalla, simulando post-its digitales pero con comportamientos inteligentes:
 - Persistencia automática del contenido.
 - Posicionamiento recordado en pantalla.
 - Capacidad de flotar sobre todas las ventanas.
@@ -191,15 +191,15 @@ El mantenimiento del proyecto se recomienda bajo control de versiones (Git) con 
 
 - **Versión inicial (v1.0.0):** Sistema funcional completo con persistencia local.  
 - **Próximas versiones:**  
-  - v1.1.0: Sincronización en la nube (opcional).  
-  - v1.2.0: IA de resumen automático de notas.  
+  - v1.1.0: Sincronización en la nube.  
+    
   - v2.0.0: Interfaz rediseñada en entorno multiplataforma.
 
 ---
 
 ## 15. Conclusión Técnica
 
-**Nexus Notes** representa una síntesis entre ingeniería humana e inteligencia artificial aplicada, demostrando la capacidad de la IA para **co-escribir software estructurado, modular y funcional** en colaboración directa con el pensamiento humano.  
+**Millon note** representa una síntesis entre ingeniería humana e inteligencia artificial aplicada, demostrando la capacidad de la IA para **co-escribir software estructurado, modular y funcional** en colaboración directa con el pensamiento humano.  
 El proyecto se considera un caso de éxito en **codificación artificial aplicada a la productividad cognitiva**, evidenciando:
 
 - Eficiencia en desarrollo asistido.  
