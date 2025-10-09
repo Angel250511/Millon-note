@@ -1,4 +1,4 @@
-DOCUMENTACIÓN TÉCNICA DEL PROYECTO: NEXUS NOTES
+#DOCUMENTACIÓN TÉCNICA DEL PROYECTO: NEXUS NOTES
 
 Desarrollado en colaboración humano-IA (Google AI Studio + Mentor Humano)
 Versión entregable: .EXE (interfaz de escritorio)
