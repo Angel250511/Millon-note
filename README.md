@@ -175,7 +175,66 @@ La versión entregable al usuario final es un **ejecutable (.exe)** compilado a 
 - `cx_Freeze`
 
 No requiere instalación de Python ni dependencias externas.
+## 13. Compatibilidad del Sistema
 
-**Estructura de distribución recomendada:**
+| Sistema Operativo | Estado | Observaciones |
+|-------------------|---------|----------------|
+| Windows 10 / 11   | ✅ Estable | DPI ajustable y soporte completo |
+| macOS             | ⚠️ Parcial | Requiere conversión con `py2app` |
+| Linux (Ubuntu)    | ✅ | Compatible mediante empaquetado manual |
+
+---
+
+## 14. Mantenimiento y Actualizaciones
+
+El mantenimiento del proyecto se recomienda bajo control de versiones (Git) con las siguientes pautas:
+
+- **Versión inicial (v1.0.0):** Sistema funcional completo con persistencia local.  
+- **Próximas versiones:**  
+  - v1.1.0: Sincronización en la nube (opcional).  
+  - v1.2.0: IA de resumen automático de notas.  
+  - v2.0.0: Interfaz rediseñada en entorno multiplataforma.
+
+---
+
+## 15. Conclusión Técnica
+
+**Nexus Notes** representa una síntesis entre ingeniería humana e inteligencia artificial aplicada, demostrando la capacidad de la IA para **co-escribir software estructurado, modular y funcional** en colaboración directa con el pensamiento humano.  
+El proyecto se considera un caso de éxito en **codificación artificial aplicada a la productividad cognitiva**, evidenciando:
+
+- Eficiencia en desarrollo asistido.  
+- Integración coherente entre diseño y lógica.  
+- Escalabilidad futura hacia entornos de IA híbrida.
+
+---
+
+## 16. Créditos y Autores
+
+**Desarrollo conceptual y supervisión humana:**  
+Ángel (Mentor Humano y Diseñador Cognitivo del Proyecto)
+
+**Codificación generativa:**  
+Google AI Studio (Sistema de Inteligencia Artificial de generación de código Python)
+
+**Tecnologías utilizadas:**  
+Tkinter, PIL (Pillow), Matplotlib, JSON, Python Standard Library.
+
+---
+
+## 17. Licencia
+
+Este proyecto se entrega bajo **licencia de uso personal y demostrativa** para portafolio profesional.  
+No está destinado a comercialización sin autorización explícita del autor.  
+Todos los derechos reservados © 2025.
+
+---
+
+## 18. Contacto Profesional
+
+**Autor:** Jesús Ángel Bustamante
+**Propósito:** Demostración de ingeniería de software asistida por IA.  
+**Aplicación:** Portafolio profesional y muestra de codificación artificial supervisada.  
+**Correo de contacto:** *jarbustamante2025@gmail.com*  
+
 
 
