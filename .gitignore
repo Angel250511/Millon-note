@@ -1,0 +1,18 @@
+# Entorno virtual de Python
+# Es específico de cada máquina y se puede recrear con requirements.txt
+.venv/
+
+# Archivos de caché de Python
+# Se generan automáticamente y no aportan nada al código fuente.
+__pycache__/
+*.pyc
+
+# Archivos de base de datos
+# No queremos subir los datos personales de los usuarios al repositorio público.
+# Solo subimos el código que CREA y GESTIONA la base de datos.
+*.db
+*.sqlite3
+
+# El archivo JSON migrado
+# Es un residuo de la versión anterior que ya no necesitamos.
+*.migrated

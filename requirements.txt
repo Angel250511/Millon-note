@@ -1,0 +1,6 @@
+pywinstyles==1.8
+# requirements.txt
+sv-ttk
+Pillow
+matplotlib
+pywinstyles
