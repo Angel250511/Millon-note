@@ -4,6 +4,7 @@
 import tkinter as tk
 from app_logic import Millon_note
 
+
 if __name__ == "__main__":
     root = tk.Tk()
     app = Millon_note(root)

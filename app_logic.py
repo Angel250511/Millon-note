@@ -1,7 +1,6 @@
 # app_logic.py (Versión Final del Ingeniero - Robusta y Clara)
 # El "cerebro" de la aplicación. Orquesta los otros módulos.
 # Contiene la lógica de negocio y el estado de la aplicación.
-
 import tkinter as tk
 from tkinter import messagebox, filedialog
 import os
@@ -29,28 +28,30 @@ class Millon_note: # He vuelto a nombrar la clase a "NexusNotesApp" para consist
     def __init__(self, root):
         # --- 1. Inicialización y Configuración del Sistema ---
         self.root = root
-        
+       # Definimos la rutas y archivos de la aplicación. 
         self.IMAGE_DIR = IMAGE_DIR
         self.ICONS = ICONS
         self.POSTIT_COLORS = POSTIT_COLORS
-
+        #creamos la carpeta de imagenes si no existe
         if not os.path.exists(self.IMAGE_DIR):
             os.makedirs(self.IMAGE_DIR)
-
+        # Inicializamos la base de datos
         self.data_manager = DataManager(DATA_FILE)
         
+        # Cargamos los datos de la base de datos
         self.datos, self.app_settings = self.data_manager.load_data()
         self.current_theme = self.app_settings.get("theme", "dark")
         self.sidebar_visible = self.app_settings.get("sidebar_visible", True)
-        
+        # Inicializamos el estado de la aplicación
         self.current_selected_theme = None
         self.open_satellites = {}
         self.listbox_to_note_id_map = {}
-
+        # Inicializamos la UI
         self.ui_builder = UIBuilder(self)
         self.satellite_manager = SatelliteManager(self)
         
         # --- 2. Arranque del Sistema ---
+        # Configuramos los fondos y los estilos
         self.ui_builder.setup_fonts()
         self.ui_builder.setup_ui() 
         
