@@ -1,7 +1,6 @@
 # satellite_manager.py
 # Módulo dedicado a la creación y gestión de las ventanas "satélite" (notas flotantes).
 # Encapsula toda la lógica de renderizado, movimiento y redimensionamiento.
-
 import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk, ImageDraw
@@ -12,16 +11,58 @@ from ui_components import CustomScrollbar # Importamos nuestro componente
 
 class SatelliteManager:
     def __init__(self, app):
+        """
+        Constructor de la clase SatelliteManager.
+
+        Parameters
+        ----------
+        app : Millon_note
+            Referencia a la aplicación principal para conectar comandos
+        """
+        
         self.app = app
         self.root = app.root
         
     def create_rounded_rectangle_image(self, w, h, r, c):
+        """
+        Crea una imagen redonda con un rectángulo con esquina redondeada.
+
+        Parameters
+        ----------
+        w : int
+            Ancho de la imagen
+        h : int
+            Alto de la imagen
+        r : int
+            Radio de la esquina
+        c : str
+            Color del rectángulo
+
+        Returns
+        -------
+        ImageTk.PhotoImage
+            Imagen redonda con el rectángulo
+        """
         img = Image.new("RGBA", (w, h), (0,0,0,0))
         draw = ImageDraw.Draw(img)
         draw.rounded_rectangle((0,0,w,h), r, fill=c)
         return ImageTk.PhotoImage(img)
 
     def create_satellite_window(self, theme_name, note_index):
+        """
+        Crea una ventana flotante asociada a una nota.
+
+        Parameters
+        ----------
+        theme_name : str
+            Nombre del tema al que pertenece la nota.
+        note_index : int
+            Índice de la nota en el tema.
+
+        Returns
+        -------
+        None
+        """
         note_data = self.app.datos[theme_name][note_index]
         note_id = note_data['id']
         sat_id = f"{theme_name}_{note_id}"
@@ -38,6 +79,18 @@ class SatelliteManager:
         
         def start_move(e): satellite.x, satellite.y = e.x, e.y
         def do_move(e):
+            """
+            Mueve la ventana flotante a una nueva posición
+
+            Parameters
+            ----------
+            e : Event
+                Evento de movimiento del ratón
+
+            Returns
+            -------
+            None
+            """
             x = satellite.winfo_x() + (e.x - satellite.x)
             y = satellite.winfo_y() + (e.y - satellite.y)
             satellite.geometry(f"+{x}+{y}")
@@ -65,6 +118,18 @@ class SatelliteManager:
                 img_label.bind("<Button-3>", lambda e: menu.post(e.x_root, e.y_root))
                 
                 def save_geometry(e):
+                    """
+                    Guarda la geometría actual de la ventana flotante en la base de datos.
+
+                    Parameters
+                    ----------
+                    e : Event
+                        Evento de soltar el botón izquierdo del ratón
+
+                    Returns
+                    -------
+                    None
+                    """
                     note_data.update({
                         'pos_x': satellite.winfo_x(), 'pos_y': satellite.winfo_y(), 
                         'width': satellite.winfo_width()
@@ -79,10 +144,35 @@ class SatelliteManager:
                 handle.place(relx=1, rely=1, anchor='se')
                 
                 def start_resize(e):
+                    """
+                    Comienza la geometría actual de la ventana flotante y guarda los valores
+                    de ancho y alto en los atributos de la ventana flotante.
+
+                    Parameters
+                    ----------
+                    e : Event
+                        Evento de presionar el botón izquierdo del ratón
+
+                    Returns
+                    -------
+                        None
+                        """
                     satellite.sw, satellite.sh = satellite.winfo_width(), satellite.winfo_height()
                     satellite.sx, satellite.sy = e.x_root, e.y_root
                 
                 def do_resize(e):
+                    """
+                    Redimensiona la ventana flotante en tiempo real.
+
+                    Parameters
+                    ----------
+                    e : Event
+                        Evento de movimiento del ratón
+
+                    Returns
+                    -------
+                    None
+                    """
                     nw = max(50, satellite.sw + (e.x_root - satellite.sx))
                     nh = int(nw * satellite.aspect)
                     new_tk_img = ImageTk.PhotoImage(satellite.original_image.resize((nw,nh), Image.Resampling.LANCZOS))
@@ -202,6 +292,10 @@ class SatelliteManager:
         self.app.open_satellites[sat_id] = satellite
 
     def initialize_satellites(self):
+        """
+        Inicializa las ventanas satélite correspondientes a las notas ancladas.
+        """
+        
         for theme, notes in list(self.app.datos.items()):
             for i, note in enumerate(notes):
                 if note.get("anclado", False):

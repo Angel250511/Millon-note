@@ -27,6 +27,13 @@ class Millon_note: # He vuelto a nombrar la clase a "NexusNotesApp" para consist
     """
     def __init__(self, root):
         # --- 1. Inicialización y Configuración del Sistema ---
+        """
+        Constructor de la clase Millon_note.
+        
+        Inicializa la aplicación Nexus Notes con la ventana principal dada.
+        Carga los datos de la base de datos y configura el estado de la aplicación.
+        Inicializa la UI y el gestor de satélites flotantes.
+        """
         self.root = root
        # Definimos la rutas y archivos de la aplicación. 
         self.IMAGE_DIR = IMAGE_DIR
@@ -72,7 +79,6 @@ class Millon_note: # He vuelto a nombrar la clase a "NexusNotesApp" para consist
             self.listbox_temas.event_generate("<<ListboxSelect>>")
 
     def on_close(self):
-        """Protocolo de cierre seguro de la aplicación."""
         self.data_manager.close()
         self.root.destroy()
 
@@ -120,6 +126,10 @@ class Millon_note: # He vuelto a nombrar la clase a "NexusNotesApp" para consist
     # --- Lógica de la Aplicación (Acciones del Usuario) ---
     
     def update_notes_list(self, event=None):
+        """
+        Actualiza la lista de apuntes en la UI cuando se selecciona un nuevo tema.
+        """
+        
         if not self.listbox_temas.curselection():
             self.current_selected_theme = None
             self._refresh_notes_view()
@@ -129,12 +139,40 @@ class Millon_note: # He vuelto a nombrar la clase a "NexusNotesApp" para consist
         self._refresh_notes_view()
 
     def add_new_note(self):
+        """
+        Agrega una nota de texto en la UI actual.
+
+        Llama a su propio método para agregar un item a la lista de apuntes.
+        """
+        
         self._add_new_item(is_image=False)
 
     def add_new_image(self):
+        """
+        Agrega una nota de imagen en la UI actual.
+        
+        Llama a su propio método para agregar un item a la lista de apuntes.
+        """
         self._add_new_item(is_image=True)
 
     def _add_new_item(self, is_image=False):
+        """
+        Agrega una nota de texto o imagen en la UI actual.
+        
+        Parámetros:
+            is_image (bool): Verdadero si la nota es una imagen o no.
+        
+        Devuelve:
+            None
+        
+        Notas:
+            - Si no hay un tema seleccionado, se muestra un aviso y no se hace nada.
+            - Si el usuario cancela la selección de la nota, no se hace nada.
+            - Si el usuario selecciona una imagen, se la guarda en la carpeta correspondiente y se
+              agrega a la lista de apuntes.
+            - Si el usuario selecciona un apunte de texto, se agrega a la lista de apuntes con el título
+              y contenido correspondientes.
+        """
         if not self.current_selected_theme:
             messagebox.showwarning("Atención", "Selecciona un tema primero.")
             return
@@ -174,6 +212,13 @@ class Millon_note: # He vuelto a nombrar la clase a "NexusNotesApp" para consist
             self._refresh_notes_view(select_last=True)
             
     def delete_note(self):
+        """
+        Elimina una nota seleccionada.
+
+        Abre una ventana de diálogo para confirmar la eliminación de la nota.
+        Si se selecciona "Sí", elimina la nota en la base de datos y refresca la vista de las notas.
+        Si la nota es una imagen, elimina el archivo de la imagen también.
+        """
         note_id = self._get_selected_note_id()
         if not note_id: return
         
@@ -195,6 +240,13 @@ class Millon_note: # He vuelto a nombrar la clase a "NexusNotesApp" para consist
             self._refresh_notes_view()
             
     def rename_note(self):
+        """
+        Renombra una nota seleccionada.
+
+        Abre una ventana de diálogo para ingresar el nuevo título de la nota.
+        Si el título es válido, actualiza la nota en la base de datos y refresca la vista de las notas.
+        """
+        
         note_id = self._get_selected_note_id()
         if not note_id:
             messagebox.showwarning("Atención", "Selecciona una nota para renombrar.")
@@ -217,6 +269,16 @@ class Millon_note: # He vuelto a nombrar la clase a "NexusNotesApp" para consist
                 self.open_satellites[sat_id].title_label.config(text=clean_title)
 
     def open_note_editor(self, event=None):
+        """
+        Abre una ventana emergente para editar una nota de texto.
+    
+        Primero se selecciona una nota en la lista de apuntes y se la pasa a
+        esta función. Luego se crea una ventana emergente en la que se inserta
+        un widget de texto con el contenido de la nota. La ventana emergente
+        tiene un botón "Guardar y Cerrar" que guarda los cambios hechos en la
+        nota y la cierra.
+        """
+    
         note_id = self._get_selected_note_id()
         if not note_id: return
         
@@ -233,6 +295,13 @@ class Millon_note: # He vuelto a nombrar la clase a "NexusNotesApp" para consist
         text_widget.insert("1.0", note_data.get("contenido", ""))
 
         def save_and_close():
+            """
+            Cierra la ventana emergente del editor de notas y guarda los cambios hechos en la nota.
+        
+            Primero se actualiza el contenido de la nota con el texto ingresado en el widget de texto.
+            Luego se elimina la ventana emergente y se recrea la ventana satélite asociada a la nota, si la hay.
+            """
+        
             note_data["contenido"] = text_widget.get("1.0", tk.END).strip()
             self.data_manager.update_note(note_data['id'], note_data)
             
@@ -302,6 +371,12 @@ class Millon_note: # He vuelto a nombrar la clase a "NexusNotesApp" para consist
         self._handle_satellite_toggle(theme_to_use, note_id, note_data["anclado"])
     
     def _handle_satellite_toggle(self, theme, note_id, should_be_pinned):
+        """
+        Maneja el toggle de una nota satélite. Si should_be_pinned es True, intenta abrir la nota
+        satélite si no lo está ya. Si es False, intenta cerrar la ventana satélite si
+        existe. El parámetro 'theme' es el nombre del tema al que pertenece la nota.
+        El parámetro 'note_id' es el ID único de la nota.
+        """
         sat_id = f"{theme}_{note_id}"
         if should_be_pinned:
             if sat_id not in self.open_satellites:
@@ -310,11 +385,23 @@ class Millon_note: # He vuelto a nombrar la clase a "NexusNotesApp" para consist
             self.open_satellites.pop(sat_id).destroy()
 
     def _recreate_satellite(self, theme, note_id):
+        
+        """
+        Vuelve a crear una ventana satélite para una nota después de que ha cambiado
+        su estado de 'anclado'.
+        
+        :param theme: El tema al que pertenece la nota.
+        :param note_id: El ID de la nota que se va a recrear.
+        :return: None
+        """
         note_index = next((i for i, note in enumerate(self.datos[theme]) if note['id'] == note_id), None)
         if note_index is not None:
             self.satellite_manager.create_satellite_window(theme, note_index)
 
     def add_new_theme(self):
+        """Abre un diálogo para solicitar el nombre de un nuevo tema.
+        Si el nombre no está vacío, se crea el tema y se agrega a la lista de temas.
+        Si el tema ya existe, se muestra un mensaje de advertencia."""
         name = CustomInputDialog(self.root, "Nuevo Tema", "Nombre del nuevo tema:", font_normal=self.font_normal).show()
         if name and name.strip():
             clean_name = name.strip()
@@ -330,6 +417,15 @@ class Millon_note: # He vuelto a nombrar la clase a "NexusNotesApp" para consist
                         break
     
     def rename_theme(self):
+        """
+        Renombra un tema existente.
+
+        Pide una interfaz de diálogo para que el usuario escriba el nuevo nombre del tema.
+        Luego, actualiza la base de datos y la lista de temas.
+
+        Si el usuario no selecciona un tema, muestra un mensaje de advertencia.
+        Si el usuario introduce un nombre que ya existe, muestra un mensaje de advertencia.
+        """
         if not self.current_selected_theme:
             messagebox.showwarning("Atención", "Selecciona un tema para renombrar.")
             return
@@ -349,6 +445,12 @@ class Millon_note: # He vuelto a nombrar la clase a "NexusNotesApp" para consist
             self.populate_themes_list()
             
     def delete_theme(self):
+        """
+        Elimina un tema y todas sus notas asociadas. Si se selecciona
+        "Sí", se eliminarán todos los datos asociados al tema seleccionado.
+        Si se selecciona "No", no se realizará ninguna acción.
+        """
+
         if not self.current_selected_theme:
             messagebox.showwarning("Atención", "Selecciona un tema para eliminar.")
             return
@@ -367,6 +469,11 @@ class Millon_note: # He vuelto a nombrar la clase a "NexusNotesApp" para consist
             self._refresh_notes_view()
     
     def populate_themes_list(self):
+        """
+        Rellena la lista de temas en la interfaz de usuario. La lista se
+        ordena alfabticamente y se selecciona el tema actual si es
+        necesario.
+        """
         current_selection = self.current_selected_theme
         self.listbox_temas.delete(0, tk.END)
         sorted_themes = sorted(self.datos.keys())
@@ -376,6 +483,12 @@ class Millon_note: # He vuelto a nombrar la clase a "NexusNotesApp" para consist
                 self.listbox_temas.selection_set(i)
     
     def toggle_sidebar(self):
+        """
+        Toggle the sidebar visibility.
+
+        If the sidebar is visible, it hides the sidebar and shows the toggle frame.
+        If the sidebar is not visible, it shows the sidebar and hides the toggle frame.
+        """
         self.sidebar_visible = not self.sidebar_visible
         if self.sidebar_visible: 
             self.sidebar_toggle_frame.pack_forget()
@@ -385,6 +498,11 @@ class Millon_note: # He vuelto a nombrar la clase a "NexusNotesApp" para consist
             self.sidebar_toggle_frame.pack(side='left', fill='y', padx=(5,0), pady=5)
 
     def toggle_theme(self):
+        """
+        Toggle the theme of the application between light and dark.
+
+        This function also re-renders all open satellites with the new theme.
+        """
         self.current_theme = "light" if self.current_theme == "dark" else "dark"
         sv_ttk.set_theme(self.current_theme)
         self.style_listboxes()
@@ -396,10 +514,18 @@ class Millon_note: # He vuelto a nombrar la clase a "NexusNotesApp" para consist
             self._recreate_satellite(theme, note_id)
 
     def style_listboxes(self):
+        """
+        Cambia el estilo de las listas de temas y apuntes para que
+        se ajusten al tema actual (oscuro o claro).
+        """
         bg, fg, sel_bg = ("#2b2b2b", "white", "#0078d4") if self.current_theme == "dark" else ("#f3f3f3", "black", "#3399ff")
         self.listbox_temas.config(background=bg, foreground=fg, selectbackground=sel_bg, selectforeground="white")
         self.listbox_apuntes.config(background=bg, foreground=fg, selectbackground=sel_bg, selectforeground="white")
 
     def clear_search(self):
+        """
+        Limpia la barra de búsqueda y vuelve a mostrar todas las notas
+        en la lista de apuntes.
+        """
         self.search_var.set("")
         self._refresh_notes_view()

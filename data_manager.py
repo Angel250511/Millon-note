@@ -116,6 +116,13 @@ class DataManager:
             return None
 
     def add_note(self, theme_name, note_dict):
+        """
+        Agrega una nota a la base de datos.
+
+        :param theme_name: El nombre del tema al que pertenece la nota.
+        :param note_dict: Un diccionario que contiene los datos de la nota.
+        :return: El ID de la nota recién agregada, o None si no se pudo agregar.
+        """
         cursor = self.conn.cursor()
         cursor.execute("SELECT id FROM themes WHERE name = ?", (theme_name,))
         theme_row = cursor.fetchone()
@@ -162,16 +169,40 @@ class DataManager:
         self.conn.commit()
         
     def delete_note(self, note_id):
+        """
+        Elimina una nota de la base de datos.
+
+        Parámetros:
+            note_id (int): El ID único de la nota a eliminar.
+        """
         cursor = self.conn.cursor()
         cursor.execute("DELETE FROM notes WHERE id = ?", (note_id,))
         self.conn.commit()
 
     def delete_theme(self, theme_name):
+        """
+        Elimina un tema de la base de datos.
+
+        Parámetros:
+            theme_name (str): El nombre del tema a eliminar.
+
+        Devuelve:
+            None
+        """
+
         cursor = self.conn.cursor()
         cursor.execute("DELETE FROM themes WHERE name = ?", (theme_name,))
         self.conn.commit()
         
     def rename_theme(self, old_name, new_name):
+        """
+        Renombra un tema existente.
+
+        old_name: str - El nombre actual del tema.
+        new_name: str - El nuevo nombre para el tema.
+
+        Actualiza la base de datos con el nuevo nombre del tema.
+        """
         cursor = self.conn.cursor()
         cursor.execute("UPDATE themes SET name = ? WHERE name = ?", (new_name, old_name))
         self.conn.commit()

@@ -15,10 +15,32 @@ except ImportError:
 
 class UIBuilder:
     def __init__(self, app):
+        """
+        Constructor de la clase UIBuilder.
+        
+        Parameters
+        ----------
+        app : Millon_note
+            Referencia a la aplicación principal para conectar comandos
+        """
+
         self.app = app # Referencia a la aplicación principal para conectar comandos
         self.root = app.root
         
     def setup_fonts(self):
+        """
+        Configura los estilos de fuente para la aplicación.
+        
+        Según la plataforma en la que se esté ejecutando, se
+        seleccionan los nombres de fuente y tamaños para los estilos de
+        fuente de la aplicación.
+        
+        Se establecen las siguientes variables:
+        
+        - self.app.font_titulo: Fuente para los títulos.
+        - self.app.font_normal: Fuente para el texto normal.
+        - self.app.font_editor: Fuente para el editor de texto.
+        """
         if platform.system() == "Windows":
             font_normal = "Segoe UI Variable"
             font_editor = "Cascadia Code"
@@ -34,6 +56,20 @@ class UIBuilder:
         self.app.font_editor = font.Font(family=font_editor, size=11)
 
     def setup_ui(self):
+        """
+        Configura la interfaz de usuario principal.
+        
+        Establece el título de la ventana, su tamaño y su estilo.
+        Configura los estilos de los widgets y los coloca en la ventana.
+        Crea los frames y los widgets necesarios para la barra lateral y la sección de notas.
+        """
+        """
+        Configura la interfaz de usuario principal.
+    
+        Establece el título de la ventana, su tamaño y su estilo.
+        Configura los estilos de los widgets y los coloca en la ventana.
+        Crea los frames y los widgets necesarios para la barra lateral y la sección de notas.
+        """
         self.root.title("Nexus Notes")
         self.root.geometry("800x600")
         self.root.protocol("WM_DELETE_WINDOW", self.app.on_close)
