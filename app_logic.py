@@ -8,7 +8,6 @@ import shutil
 import time
 import platform
 import sv_ttk
-
 from config import DATA_FILE, IMAGE_DIR, ICONS, POSTIT_COLORS
 from ui_components import CustomInputDialog, ColorPickerDialog
 from data_manager import DataManager
@@ -20,7 +19,7 @@ try:
 except ImportError:
     pywinstyles = None
 
-class Millon_note: # He vuelto a nombrar la clase a "NexusNotesApp" para consistencia.
+class Millon_note: 
     """
     Clase principal que encapsula toda la lógica y el estado de la aplicación.
     Actúa como el controlador central, coordinando la UI, los datos y las acciones del usuario.

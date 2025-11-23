@@ -1,6 +1,5 @@
 # data_manager.py (Versión 3.0 - Nativa de SQLite)
 # Módulo de persistencia de datos que gestiona todas las interacciones con la base de datos SQLite.
-
 import sqlite3
 
 class DataManager:

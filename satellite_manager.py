@@ -10,6 +10,7 @@ import re
 from ui_components import CustomScrollbar # Importamos nuestro componente
 
 class SatelliteManager:
+
     def __init__(self, app):
         """
         Constructor de la clase SatelliteManager.
@@ -208,9 +209,9 @@ class SatelliteManager:
             header = tk.Frame(bg_label, bg=bg)
             header.pack(side="top", fill="x", padx=(15, 5), pady=(10, 5))
             
-            title_lbl = tk.Label(header, text=note_data["titulo"], font=self.app.font_normal, bg=bg, fg=fg, wraplength=px_size-40, justify="left")
-            title_lbl.pack(side="left")
-            satellite.title_label = title_lbl
+            # No mostramos el título en las ventanas satélite.
+            # Dejamos el header vacío (el botón de cerrar se añadirá más abajo).
+            # Si en el futuro quieres reactivar el título, podemos añadir una opción de configuración.
             
             # --- INICIO DE LA LÓGICA DE CENTRADO DEFINITIVA ---
             temp_container = tk.Frame(bg_label)
@@ -278,7 +279,7 @@ class SatelliteManager:
                 text_widget.config(state="disabled")
             # --- FIN DE LA LÓGICA DE CENTRADO ---
 
-            for w in [bg_label, header, title_lbl]:
+            for w in [bg_label, header]:
                 w.bind("<Button-1>", start_move)
                 w.bind("<B1-Motion>", do_move)
                 w.bind("<ButtonRelease-1>", lambda e, n=note_data: self.app.data_manager.update_note(n['id'], n))
