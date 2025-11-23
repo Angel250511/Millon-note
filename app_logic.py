@@ -14,12 +14,13 @@ from data_manager import DataManager
 from satellite_manager import SatelliteManager
 from ui_builder import UIBuilder
 
+
 try:
     import pywinstyles
 except ImportError:
     pywinstyles = None
 
-class Millon_note: 
+class Millon_note:
     """
     Clase principal que encapsula toda la lógica y el estado de la aplicación.
     Actúa como el controlador central, coordinando la UI, los datos y las acciones del usuario.
@@ -28,13 +29,13 @@ class Millon_note:
         # --- 1. Inicialización y Configuración del Sistema ---
         """
         Constructor de la clase Millon_note.
-        
+
         Inicializa la aplicación Nexus Notes con la ventana principal dada.
         Carga los datos de la base de datos y configura el estado de la aplicación.
         Inicializa la UI y el gestor de satélites flotantes.
         """
         self.root = root
-       # Definimos la rutas y archivos de la aplicación. 
+       # Definimos la rutas y archivos de la aplicación.
         self.IMAGE_DIR = IMAGE_DIR
         self.ICONS = ICONS
         self.POSTIT_COLORS = POSTIT_COLORS
@@ -43,7 +44,7 @@ class Millon_note:
             os.makedirs(self.IMAGE_DIR)
         # Inicializamos la base de datos
         self.data_manager = DataManager(DATA_FILE)
-        
+
         # Cargamos los datos de la base de datos
         self.datos, self.app_settings = self.data_manager.load_data()
         self.current_theme = self.app_settings.get("theme", "dark")
@@ -55,12 +56,12 @@ class Millon_note:
         # Inicializamos la UI
         self.ui_builder = UIBuilder(self)
         self.satellite_manager = SatelliteManager(self)
-        
+
         # --- 2. Arranque del Sistema ---
         # Configuramos los fondos y los estilos
         self.ui_builder.setup_fonts()
-        self.ui_builder.setup_ui() 
-        
+        self.ui_builder.setup_ui()
+
         self._initialize_view()
         self.satellite_manager.initialize_satellites()
 
@@ -118,17 +119,17 @@ class Millon_note:
                 self.listbox_apuntes.insert(tk.END, prefix + note.get("titulo", "Sin Título"))
                 self.listbox_to_note_id_map[listbox_index] = note['id']
                 listbox_index += 1
-        
+
         if select_last and self.listbox_apuntes.size() > 0:
             self.listbox_apuntes.selection_set(tk.END)
 
     # --- Lógica de la Aplicación (Acciones del Usuario) ---
-    
+
     def update_notes_list(self, event=None):
         """
         Actualiza la lista de apuntes en la UI cuando se selecciona un nuevo tema.
         """
-        
+
         if not self.listbox_temas.curselection():
             self.current_selected_theme = None
             self._refresh_notes_view()
@@ -143,13 +144,13 @@ class Millon_note:
 
         Llama a su propio método para agregar un item a la lista de apuntes.
         """
-        
+
         self._add_new_item(is_image=False)
 
     def add_new_image(self):
         """
         Agrega una nota de imagen en la UI actual.
-        
+
         Llama a su propio método para agregar un item a la lista de apuntes.
         """
         self._add_new_item(is_image=True)
@@ -157,13 +158,13 @@ class Millon_note:
     def _add_new_item(self, is_image=False):
         """
         Agrega una nota de texto o imagen en la UI actual.
-        
+
         Parámetros:
             is_image (bool): Verdadero si la nota es una imagen o no.
-        
+
         Devuelve:
             None
-        
+
         Notas:
             - Si no hay un tema seleccionado, se muestra un aviso y no se hace nada.
             - Si el usuario cancela la selección de la nota, no se hace nada.
@@ -186,7 +187,7 @@ class Millon_note:
         note_title_str = CustomInputDialog(self.root, "Nuevo Apunte", prompt_title, initial_value, self.font_normal).show()
         if not note_title_str or not note_title_str.strip():
             return
-        
+
         note_title = note_title_str.strip()
         new_note_dict = {"titulo": note_title, "anclado": False}
 
@@ -203,13 +204,13 @@ class Millon_note:
             color = ColorPickerDialog(self.root, self.POSTIT_COLORS, self.font_normal).show()
             if not color: return
             new_note_dict.update({"type": "text", "contenido": "", "pos_x": 100, "pos_y": 100, "color": color})
-            
+
         new_id = self.data_manager.add_note(self.current_selected_theme, new_note_dict)
         if new_id:
             new_note_dict['id'] = new_id
             self.datos[self.current_selected_theme].append(new_note_dict)
             self._refresh_notes_view(select_last=True)
-            
+
     def delete_note(self):
         """
         Elimina una nota seleccionada.
@@ -220,7 +221,7 @@ class Millon_note:
         """
         note_id = self._get_selected_note_id()
         if not note_id: return
-        
+
         note_to_delete = self._get_note_by_id(note_id)
         if not note_to_delete: return
 
@@ -237,7 +238,7 @@ class Millon_note:
             self.data_manager.delete_note(note_id)
             self.datos[self.current_selected_theme] = [n for n in self.datos[self.current_selected_theme] if n['id'] != note_id]
             self._refresh_notes_view()
-            
+
     def rename_note(self):
         """
         Renombra una nota seleccionada.
@@ -245,7 +246,7 @@ class Millon_note:
         Abre una ventana de diálogo para ingresar el nuevo título de la nota.
         Si el título es válido, actualiza la nota en la base de datos y refresca la vista de las notas.
         """
-        
+
         note_id = self._get_selected_note_id()
         if not note_id:
             messagebox.showwarning("Atención", "Selecciona una nota para renombrar.")
@@ -262,7 +263,7 @@ class Millon_note:
             note_to_rename["titulo"] = clean_title
             self.data_manager.update_note(note_id, note_to_rename)
             self._refresh_notes_view()
-            
+
             sat_id = f"{self.current_selected_theme}_{note_id}"
             if sat_id in self.open_satellites and hasattr(self.open_satellites[sat_id], 'title_label'):
                 self.open_satellites[sat_id].title_label.config(text=clean_title)
@@ -270,17 +271,17 @@ class Millon_note:
     def open_note_editor(self, event=None):
         """
         Abre una ventana emergente para editar una nota de texto.
-    
+
         Primero se selecciona una nota en la lista de apuntes y se la pasa a
         esta función. Luego se crea una ventana emergente en la que se inserta
         un widget de texto con el contenido de la nota. La ventana emergente
         tiene un botón "Guardar y Cerrar" que guarda los cambios hechos en la
         nota y la cierra.
         """
-    
+
         note_id = self._get_selected_note_id()
         if not note_id: return
-        
+
         note_data = self._get_note_by_id(note_id)
         if not note_data or note_data.get("type") == "image": return
 
@@ -288,7 +289,7 @@ class Millon_note:
         if platform.system() == "Windows" and pywinstyles: pywinstyles.apply_style(editor, "acrylic")
         editor.title(f"Editando: {note_data['titulo']}")
         editor.geometry("600x500")
-        
+
         text_widget = tk.Text(editor, font=self.font_editor, wrap='word', bd=0, highlightthickness=0, relief="flat", padx=10, pady=10)
         text_widget.pack(fill='both', expand=True)
         text_widget.insert("1.0", note_data.get("contenido", ""))
@@ -296,21 +297,21 @@ class Millon_note:
         def save_and_close():
             """
             Cierra la ventana emergente del editor de notas y guarda los cambios hechos en la nota.
-        
+
             Primero se actualiza el contenido de la nota con el texto ingresado en el widget de texto.
             Luego se elimina la ventana emergente y se recrea la ventana satélite asociada a la nota, si la hay.
             """
-        
+
             note_data["contenido"] = text_widget.get("1.0", tk.END).strip()
             self.data_manager.update_note(note_data['id'], note_data)
-            
+
             sat_id = f"{self.current_selected_theme}_{note_data['id']}"
             if sat_id in self.open_satellites:
                 self.open_satellites.pop(sat_id).destroy()
                 self._recreate_satellite(self.current_selected_theme, note_data['id'])
-                
+
             editor.destroy()
-        
+
         editor.protocol("WM_DELETE_WINDOW", save_and_close)
         tk.ttk.Button(editor, text="Guardar y Cerrar", command=save_and_close, style="Accent.TButton").pack(pady=10)
 
@@ -327,10 +328,10 @@ class Millon_note:
             de una ventana satélite), opera directamente sobre esa nota específica,
             sin importar la selección actual en la UI principal.
         """
-        
+
         # Determina sobre qué tema se va a operar.
         theme_to_use = self.current_selected_theme
-        
+
         # Escenario 2: La llamada viene de un satélite.
         if note_id is not None and theme is not None:
             theme_to_use = theme
@@ -342,7 +343,7 @@ class Millon_note:
         # no podemos continuar.
         if not note_id or not theme_to_use:
             return
-        
+
         # Buscamos la nota correspondiente en nuestra estructura de datos en memoria.
         # Es crucial operar sobre la versión en RAM para mantener la consistencia de la UI.
         # Usamos un bucle explícito en lugar de _get_note_by_id para manejar el caso
@@ -352,7 +353,7 @@ class Millon_note:
             if note['id'] == note_id:
                 note_data = note
                 break
-        
+
         # Si, por alguna razón, la nota no se encuentra, abortamos para evitar errores.
         if not note_data:
             return
@@ -360,15 +361,15 @@ class Millon_note:
         # El núcleo de la lógica: invertimos el estado 'anclado' de la nota.
         # El .get('anclado', False) previene un error si la clave no existiera.
         note_data["anclado"] = not note_data.get("anclado", False)
-        
+
         # Persistimos el cambio en la base de datos. Esta es la operación crítica.
         # Le pasamos el ID y el diccionario de la nota completo y actualizado.
         self.data_manager.update_note(note_id, note_data)
-        
+
         # Finalmente, le decimos a la lógica de la UI que muestre u oculte la ventana
         # satélite según el nuevo estado de 'anclado'.
         self._handle_satellite_toggle(theme_to_use, note_id, note_data["anclado"])
-    
+
     def _handle_satellite_toggle(self, theme, note_id, should_be_pinned):
         """
         Maneja el toggle de una nota satélite. Si should_be_pinned es True, intenta abrir la nota
@@ -384,11 +385,11 @@ class Millon_note:
             self.open_satellites.pop(sat_id).destroy()
 
     def _recreate_satellite(self, theme, note_id):
-        
+
         """
         Vuelve a crear una ventana satélite para una nota después de que ha cambiado
         su estado de 'anclado'.
-        
+
         :param theme: El tema al que pertenece la nota.
         :param note_id: El ID de la nota que se va a recrear.
         :return: None
@@ -414,7 +415,7 @@ class Millon_note:
                         self.listbox_temas.selection_set(i)
                         self.listbox_temas.event_generate("<<ListboxSelect>>")
                         break
-    
+
     def rename_theme(self):
         """
         Renombra un tema existente.
@@ -442,7 +443,7 @@ class Millon_note:
             self.datos[clean_name] = self.datos.pop(old_name)
             self.current_selected_theme = clean_name
             self.populate_themes_list()
-            
+
     def delete_theme(self):
         """
         Elimina un tema y todas sus notas asociadas. Si se selecciona
@@ -460,13 +461,13 @@ class Millon_note:
                     try:
                         if os.path.exists(note["path"]): os.remove(note["path"])
                     except OSError as e: print(f"Error al eliminar archivo de imagen: {e}")
-            
+
             self.data_manager.delete_theme(self.current_selected_theme)
             del self.datos[self.current_selected_theme]
             self.current_selected_theme = None
             self.populate_themes_list()
             self._refresh_notes_view()
-    
+
     def populate_themes_list(self):
         """
         Rellena la lista de temas en la interfaz de usuario. La lista se
@@ -480,7 +481,7 @@ class Millon_note:
             self.listbox_temas.insert(tk.END, tema)
             if tema == current_selection:
                 self.listbox_temas.selection_set(i)
-    
+
     def toggle_sidebar(self):
         """
         Toggle the sidebar visibility.
@@ -489,10 +490,10 @@ class Millon_note:
         If the sidebar is not visible, it shows the sidebar and hides the toggle frame.
         """
         self.sidebar_visible = not self.sidebar_visible
-        if self.sidebar_visible: 
+        if self.sidebar_visible:
             self.sidebar_toggle_frame.pack_forget()
             self.sidebar.pack(side='left', fill='y', padx=(5,0), pady=5)
-        else: 
+        else:
             self.sidebar.pack_forget()
             self.sidebar_toggle_frame.pack(side='left', fill='y', padx=(5,0), pady=5)
 
